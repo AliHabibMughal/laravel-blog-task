@@ -36,7 +36,19 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $post = Post::create([
+            'title' => $request->title,
+            'body' => $request->body,
+            'user_id' => auth()->user()->id,
+        ]);
+        return response()->json([
+            'status' => true,
+            'message' => 'Post Created Successfully',
+            'data' => $post,
+        ], 200);
+
+        // $post = new Post();
+        // $post->user_id = auth()->user()->id;
     }
 
     /**
