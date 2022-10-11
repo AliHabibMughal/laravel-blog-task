@@ -41,7 +41,9 @@ class PostController extends Controller
             'title' => $request->title,
             'body' => $request->body,
             'user_id' => Auth::id(),
+            'category_id' => $request->category_id,
         ]);
+
         return response()->json([
             'status' => true,
             'message' => 'Post Created Successfully',

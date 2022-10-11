@@ -12,6 +12,7 @@ class Category extends Model
     public function posts()
     {
         return $this->belongsToMany(Post::class);
+        // return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
     }
 
     protected $fillable = [

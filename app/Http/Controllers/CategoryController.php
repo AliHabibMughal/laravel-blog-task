@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\{Category, Post};
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -13,7 +14,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::all();
+        $category = Category::with('posts')->first();
+        $category->posts->attach($posts);
     }
 
     /**
@@ -34,7 +37,16 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $category = Category::create([
+            'name' => $request->name,
+            'post_id' => $request->post_id,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Category Selected Successfully',
+            'data' => $category,
+        ], 200);
     }
 
     /**

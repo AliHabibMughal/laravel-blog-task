@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AuthController, PostController, CommentController};
+use App\Http\Controllers\{AuthController, PostController, CommentController, CategoryController};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,3 +23,4 @@ Route::post('registeruser', [AuthController::class, 'createUser']);
 Route::post('loginuser', [AuthController::class, 'loginUser']);
 Route::apiResource('posts', PostController::class)->middleware('auth:sanctum');
 Route::apiResource('comments', CommentController::class);
+Route::apiResource('categories', CategoryController::class);

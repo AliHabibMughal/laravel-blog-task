@@ -35,12 +35,10 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        // $comment = new Comment();
-        // $comment->body = $request->body;
-        // $comment->post_id = $request->post_id;
         $comment = Comment::create([
             'body' => $request->body,
             'post_id' => $request->post_id,
+            'user_id' => $request->user_id,
         ]);
 
         return response()->json([
