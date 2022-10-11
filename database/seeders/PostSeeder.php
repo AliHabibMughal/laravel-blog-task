@@ -17,9 +17,9 @@ class PostSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
-        $post = new Post();
 
         for ($i = 0; $i < 20; $i++) {
+            $post = new Post();
             $post->title = $faker->paragraph(1);
             $post->body = $faker->text();
             $post->user_id = User::first()->id;

@@ -18,9 +18,9 @@ class UserSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
-        $user = new User();
 
         for ($i = 0; $i < 5; $i++) {
+            $user = new User();
             $user->name = $faker->name();
             $user->email = $faker->email();
             $user->password = Hash::make($faker->password());
