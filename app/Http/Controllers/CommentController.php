@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
-use App\Models\User;
+use App\Models\Comment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class PostController extends Controller
+class CommentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +14,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        return Post::with('user')->get();
+        //
     }
 
     /**
@@ -37,19 +35,19 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $post = Post::create([
-            'title' => $request->title,
+        // $comment = new Comment();
+        // $comment->body = $request->body;
+        // $comment->post_id = $request->post_id;
+        $comment = Comment::create([
             'body' => $request->body,
-            'user_id' => Auth::id(),
+            'post_id' => $request->post_id,
         ]);
+
         return response()->json([
             'status' => true,
-            'message' => 'Post Created Successfully',
-            'data' => $post,
+            'message' => 'Comment Posted Successfully',
+            'data' => $comment,
         ], 200);
-
-        // $post = new Post();
-        // $post->user_id = auth()->user()->id;
     }
 
     /**

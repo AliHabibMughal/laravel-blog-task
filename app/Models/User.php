@@ -16,6 +16,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
 
     /**
      * The attributes that are mass assignable.

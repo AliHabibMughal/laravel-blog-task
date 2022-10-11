@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class PostController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +13,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        return Post::with('user')->get();
+        //
     }
 
     /**
@@ -37,19 +34,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $post = Post::create([
-            'title' => $request->title,
-            'body' => $request->body,
-            'user_id' => Auth::id(),
-        ]);
-        return response()->json([
-            'status' => true,
-            'message' => 'Post Created Successfully',
-            'data' => $post,
-        ], 200);
-
-        // $post = new Post();
-        // $post->user_id = auth()->user()->id;
+        //
     }
 
     /**
