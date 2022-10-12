@@ -21,13 +21,18 @@ class Post extends Model
 
     public function comments()
     {
-        return $this->morphMany(Comment::class, 'commentable');
+        return $this->hasMany(Comment::class);
+    }
+    public function images()
+    {
+        return $this->hasMany(Image::class);
     }
 
     protected $fillable = [
         'title',
         'body',
         'slug',
+        'image',
         'user_id',
     ];
 }

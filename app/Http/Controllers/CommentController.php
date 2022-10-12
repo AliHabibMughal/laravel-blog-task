@@ -48,6 +48,21 @@ class CommentController extends Controller
         ], 200);
     }
 
+    public function replyStore(Request $request)
+    {
+        $reply = Comment::create([
+            'body' => $request->body,
+            'post_id' => $request->post_id,
+            'user_id' => $request->user_id,
+            'parent_id' => $request->comment_id,
+        ]);
+        return response()->json([
+            'status' => true,
+            'message' => 'Reply Posted Successfully',
+            'data' => $reply,
+        ], 200);
+    }
+
     /**
      * Display the specified resource.
      *
