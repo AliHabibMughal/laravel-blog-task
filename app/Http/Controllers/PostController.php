@@ -6,6 +6,8 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -37,12 +39,29 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        $validatePost = Validator::make(
+            $request->all(),
+            [
+                'title' => 'required|min:5|max:255|string|unique:posts,title',
+                'body' => 'required',
+            ],
+        );
+        if ($validatePost->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'title and body required',
+                'errors' => $validatePost->errors()
+            ], 401);
+        }
+
         $post = Post::create([
             'title' => $request->title,
             'body' => $request->body,
+            'slug' =>  Str::slug($request->title),
             'user_id' => Auth::id(),
-            'category_id' => $request->category_id,
         ]);
+
+        // $post->categories()->attach([]);
 
         return response()->json([
             'status' => true,

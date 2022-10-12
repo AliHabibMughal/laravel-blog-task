@@ -14,9 +14,12 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
-        $category = Category::with('posts')->first();
-        $category->posts->attach($posts);
+
+        
+        // $posts = Post::all();
+        // $category = Category::with('posts')->first();
+        // $category->posts()->attach($posts);
+        // return $category;
     }
 
     /**

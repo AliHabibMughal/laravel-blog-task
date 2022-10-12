@@ -20,6 +20,7 @@ class PostFactory extends Factory
         return [
             'title' => fake()->paragraph(1),
             'body' => fake()->text(),
+            'slug' => fake()->url(),
             'user_id' => User::all()->random()->id,
 
             // 'user_id' => auth()->user()->id      for runtime
