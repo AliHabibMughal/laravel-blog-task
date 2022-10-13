@@ -21,6 +21,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('registeruser', [AuthController::class, 'createUser']);
 Route::post('loginuser', [AuthController::class, 'loginUser']);
-Route::apiResource('posts', PostController::class)->middleware('auth:sanctum');
-Route::apiResource('comments', CommentController::class);
+Route::middleware('auth:sanctum')->group(function(){
+    Route::apiResource('posts', PostController::class);
+    Route::apiResource('comments', CommentController::class);
+    Route::post('reply', [CommentController::class, 'replyStore']);
+});
 Route::apiResource('categories', CategoryController::class);

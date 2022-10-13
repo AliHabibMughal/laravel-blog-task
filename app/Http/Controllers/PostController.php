@@ -49,7 +49,7 @@ class PostController extends Controller
         if ($validatePost->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'title and body required',
+                'message' => 'Blog title and body required',
                 'errors' => $validatePost->errors()
             ], 401);
         }
@@ -60,9 +60,7 @@ class PostController extends Controller
             'slug' =>  Str::slug($request->title),
             'user_id' => Auth::id(),
         ]);
-
         // $post->categories()->attach([]);
-
         return response()->json([
             'status' => true,
             'message' => 'Post Created Successfully',

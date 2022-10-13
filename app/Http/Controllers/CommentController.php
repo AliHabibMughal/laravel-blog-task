@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -37,8 +38,8 @@ class CommentController extends Controller
     {
         $comment = Comment::create([
             'body' => $request->body,
+            'user_id' => Auth::id(),
             'post_id' => $request->post_id,
-            'user_id' => $request->user_id,
         ]);
 
         return response()->json([
@@ -52,9 +53,9 @@ class CommentController extends Controller
     {
         $reply = Comment::create([
             'body' => $request->body,
-            'post_id' => $request->post_id,
             'user_id' => $request->user_id,
-            'parent_id' => $request->comment_id,
+            'post_id' => $request->post_id,
+            'parent_id' => $request->parent_id,
         ]);
         return response()->json([
             'status' => true,

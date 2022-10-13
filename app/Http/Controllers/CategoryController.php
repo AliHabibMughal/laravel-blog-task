@@ -42,6 +42,8 @@ class CategoryController extends Controller
     {
         $category = Category::create([
             'name' => $request->name,
+        // $post->categories()->attach([]);
+            
         ]);
 
         return response()->json([
