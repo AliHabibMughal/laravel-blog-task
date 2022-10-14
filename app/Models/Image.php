@@ -18,5 +18,6 @@ class Image extends Model
         'title',
         'alt',
         'src',
+        'post_id',
     ];
 }

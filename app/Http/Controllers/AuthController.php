@@ -14,7 +14,7 @@ class AuthController extends Controller
     /**
      * Create User
      * @param Request $request
-     * @return User 
+     * @return User
      */
     public function createUser(Request $request)
     {
@@ -105,17 +105,5 @@ class AuthController extends Controller
         }
     }
 
-    // public function sendError($error, $errorMessages = [], $code = 404)
-    // {
-    //     $response = [
-    //         'success' => false,
-    //         'message' => $error,
-    //     ];
-
-    //     if (!empty($errorMessages)) {
-    //         $response['data'] = $errorMessages;
-    //     }
-
-    //     return response()->json($response, $code);
-    // }
+    
 }

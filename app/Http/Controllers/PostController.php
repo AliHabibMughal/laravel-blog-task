@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
-use App\Models\User;
+use App\Models\{Post, Category, User};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -18,17 +17,12 @@ class PostController extends Controller
      */
     public function index()
     {
-        return Post::with('user')->get();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $posts = Post::with('user')->get();
+        return response()->json([
+            'status' => true,
+            'message' => 'All Posts With Users Retrieved Successfully',
+            'data' => $posts,
+        ]);
     }
 
     /**
@@ -42,14 +36,14 @@ class PostController extends Controller
         $validatePost = Validator::make(
             $request->all(),
             [
-                'title' => 'required|min:5|max:255|string|unique:posts,title',
+                'title' => 'required|max:100|string|unique:posts,title',
                 'body' => 'required',
             ],
         );
         if ($validatePost->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'Blog title and body required',
+                'message' => 'Blog fields are required',
                 'errors' => $validatePost->errors()
             ], 401);
         }
@@ -60,15 +54,13 @@ class PostController extends Controller
             'slug' =>  Str::slug($request->title),
             'user_id' => Auth::id(),
         ]);
-        // $post->categories()->attach([]);
+
+        $post->categories()->sync($request->category_id);
         return response()->json([
             'status' => true,
             'message' => 'Post Created Successfully',
             'data' => $post,
         ], 200);
-
-        // $post = new Post();
-        // $post->user_id = auth()->user()->id;
     }
 
     /**
@@ -79,18 +71,18 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        $post = Post::with('user')->find($id);
+        if (is_null($post)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Post Not Found',
+            ]);
+        }
+        return response()->json([
+            'status' => true,
+            'message' => 'Post with user retrieved successfully',
+            'data' => $post,
+        ]);
     }
 
     /**
@@ -102,7 +94,36 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $post = Category::find($id);
+        if (is_null($post)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Post Not Found',
+            ]);
+        }
+        $validatePost = Validator::make(
+            $request->all(),
+            [
+                'title' => 'required',
+                'body' => 'required',
+            ],
+        );
+        if ($validatePost->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Enter Post Title & Body',
+                'errors' => $validatePost->errors()
+            ], 401);
+        }
+
+        $post->title = $request->title;
+        $post->body = $request->body;
+        $post->save();
+        return response()->json([
+            'status' => true,
+            'message' => 'Category Updated Successfully',
+            'data' => $post,
+        ], 200);
     }
 
     /**
@@ -113,6 +134,18 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+        if (is_null($post)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Post Not Found',
+            ]);
+        }
+        $post->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'Post Deleted Successfully',
+            'data' => $post,
+        ]);
     }
 }

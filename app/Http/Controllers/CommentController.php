@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller
 {
@@ -15,17 +16,12 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $comment = Comment::all();
+        return response()->json([
+            'status' => true,
+            'message' => 'All Comments Retrieved Successfully',
+            'data' => $comment,
+        ]);
     }
 
     /**
@@ -36,6 +32,20 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
+        $validatePost = Validator::make(
+            $request->all(),
+            [
+                'body' => 'required',
+            ],
+        );
+        if ($validatePost->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Empty Comment Field!',
+                'errors' => $validatePost->errors()
+            ], 401);
+        }
+
         $comment = Comment::create([
             'body' => $request->body,
             'user_id' => Auth::id(),
@@ -53,7 +63,7 @@ class CommentController extends Controller
     {
         $reply = Comment::create([
             'body' => $request->body,
-            'user_id' => $request->user_id,
+            'user_id' => Auth::id(),
             'post_id' => $request->post_id,
             'parent_id' => $request->parent_id,
         ]);
@@ -72,18 +82,18 @@ class CommentController extends Controller
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        $comment = Comment::find($id);
+        if (is_null($comment)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Comment Not Found',
+            ]);
+        }
+        return response()->json([
+            'status' => true,
+            'message' => 'Comment Retrieved Successfully',
+            'data' => $comment,
+        ]);
     }
 
     /**
@@ -95,7 +105,34 @@ class CommentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $comment = Comment::find($id);
+        if (is_null($comment)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Comment Not Found',
+            ]);
+        }
+
+        $validateComment = Validator::make(
+            $request->all(),
+            [
+                'body' => 'required',
+            ],
+        );
+        if ($validateComment->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Enter Comment',
+                'errors' => $validateComment->errors()
+            ], 401);
+        }
+        $comment->body = $request->body;
+        $comment->save();
+        return response()->json([
+            'status' => true,
+            'message' => 'Comment Updated Successfully',
+            'data' => $comment,
+        ], 200);
     }
 
     /**
@@ -106,6 +143,19 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $comment = Comment::find($id);
+        if (is_null($comment)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Comment Not Found',
+            ]);
+        }
+        
+        $comment->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'Comment Deleted Successfully with all replies(if any)',
+            'data' => $comment,
+        ]);
     }
 }
