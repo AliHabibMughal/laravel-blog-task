@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -19,7 +20,8 @@ class CategoryController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'All Categories Retrieved Successfully',
-            'data' => $category,
+            'data' => CategoryResource::collection($category),
+            // 'data' => $category,
         ]);
         // $posts = Post::all();
         // $category = Category::with('posts')->find(5);

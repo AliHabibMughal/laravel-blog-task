@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ImageResource;
 use App\Models\Image;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 class ImageController extends Controller
@@ -19,7 +21,8 @@ class ImageController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'All Images Retrieved Successfully',
-            'data' => $images,
+            'data' => ImageResource::collection($images),
+            // 'data' => $images,
         ]);
     }
 
@@ -95,7 +98,7 @@ class ImageController extends Controller
         if (is_null($image)) {
             return response()->json([
                 'status' => false,
-                'message' => 'image Not Found',
+                'message' => 'Image Not Found',
             ]);
         }
 
@@ -114,11 +117,18 @@ class ImageController extends Controller
                 'errors' => $validateImage->errors()
             ], 401);
         }
-        $image->body = $request->body;
+        $image->delete();
+        $image_path = public_path("storage/{$image->src}");
+        unlink($image_path);
+
+        $image->title = $request->title;
+        $image->alt = $request->alt;
+        $image->src = $request->file('src')->store('image', 'public');
+        $image->post_id = $request->post_id;
         $image->save();
         return response()->json([
             'status' => true,
-            'message' => 'Image Data Updated Successfully',
+            'message' => 'Image Updated Successfully',
             'data' => $image,
         ], 200);
     }
@@ -135,11 +145,14 @@ class ImageController extends Controller
         if (is_null($image)) {
             return response()->json([
                 'status' => false,
-                'message' => 'image Not Found',
+                'message' => 'Image Not Found',
             ]);
         }
 
         $image->delete();
+        $image_path = public_path("storage/{$image->src}");
+        unlink($image_path);
+
         return response()->json([
             'status' => true,
             'message' => 'Image Deleted Successfully',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostResource;
 use App\Models\{Post, Category, User};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,11 +18,12 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('user')->get();
+        $posts = Post::all();
         return response()->json([
             'status' => true,
             'message' => 'All Posts With Users Retrieved Successfully',
-            'data' => $posts,
+            'data' => PostResource::collection($posts),
+            // 'data' => $posts,
         ]);
     }
 
@@ -38,6 +40,7 @@ class PostController extends Controller
             [
                 'title' => 'required|max:100|string|unique:posts,title',
                 'body' => 'required',
+                'category_id' => 'required',
             ],
         );
         if ($validatePost->fails()) {
@@ -94,7 +97,7 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $post = Category::find($id);
+        $post = Post::find($id);
         if (is_null($post)) {
             return response()->json([
                 'status' => false,
