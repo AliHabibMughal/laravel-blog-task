@@ -80,7 +80,8 @@ class CategoryController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Category with posts retrieved successfully',
-            'data' => $category,
+            'data' => new CategoryResource($category),
+
         ]);
     }
 

@@ -82,7 +82,7 @@ class ImageController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Image Retrieved Successfully',
-            'data' => $image,
+            'data' => new ImageResource($image),
         ]);
     }
 
@@ -118,6 +118,7 @@ class ImageController extends Controller
                 'errors' => $validateImage->errors()
             ], 401);
         }
+        
         $image->delete();
         $image_path = public_path("storage/{$image->src}");
         unlink($image_path);

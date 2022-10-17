@@ -109,7 +109,7 @@ class CommentController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Comment With Replies Retrieved Successfully',
-            'data' => $comment,
+            'data' => new CommentResource($comment),
         ]);
     }
 
