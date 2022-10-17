@@ -74,8 +74,8 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post = Post::with('user')->find($id);
-        if (is_null($post)) {
+        $post = Post::find($id);
+        if (!$post) {
             return response()->json([
                 'status' => false,
                 'message' => 'Post Not Found',
@@ -84,7 +84,7 @@ class PostController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Post with user retrieved successfully',
-            'data' => $post,
+            'data' => new PostResource($post),
         ]);
     }
 

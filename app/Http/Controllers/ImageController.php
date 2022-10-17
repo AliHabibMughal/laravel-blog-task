@@ -7,6 +7,7 @@ use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ImageController extends Controller
 {
@@ -95,7 +96,7 @@ class ImageController extends Controller
     public function update(Request $request, $id)
     {
         $image = Image::find($id);
-        if (is_null($image)) {
+        if (!$image) {
             return response()->json([
                 'status' => false,
                 'message' => 'Image Not Found',
@@ -120,6 +121,10 @@ class ImageController extends Controller
         $image->delete();
         $image_path = public_path("storage/{$image->src}");
         unlink($image_path);
+
+        // $storage = Storage::disk('public');
+        // $imageName = Str::random(32).".".$request->src->getClientOriginalExtenstion();
+        // $storage->put($imageName, file_get_contents($request->src));
 
         $image->title = $request->title;
         $image->alt = $request->alt;
