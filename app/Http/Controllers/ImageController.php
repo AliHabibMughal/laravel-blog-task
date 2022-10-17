@@ -15,12 +15,12 @@ class ImageController extends Controller
      */
     public function index()
     {
-        // $images = Image::all();
-        // return response()->json([
-        //     'status' => true,
-        //     'message' => 'All Categories Retrieved Successfully',
-        //     'data' => $images,
-        // ]);
+        $images = Image::all();
+        return response()->json([
+            'status' => true,
+            'message' => 'All Images Retrieved Successfully',
+            'data' => $images,
+        ]);
     }
 
     /**
