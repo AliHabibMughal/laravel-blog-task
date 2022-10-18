@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('registeruser', [AuthController::class, 'createUser']);
 Route::post('loginuser', [AuthController::class, 'loginUser']);
 Route::middleware('auth:sanctum')->group(function () {
+
     Route::get('users', [AuthController::class, 'index']);
     Route::get('user/{id}', [AuthController::class, 'show']);
     Route::delete('user/{id}', [AuthController::class, 'destroy']);
@@ -36,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('reply', [CommentController::class, 'replyStore']);
     Route::delete('reply/{id}', [CommentController::class, 'destroyReply']);
     Route::patch('reply/{id}', [CommentController::class, 'updateReply']);
+    
 });
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('images', ImageController::class);
