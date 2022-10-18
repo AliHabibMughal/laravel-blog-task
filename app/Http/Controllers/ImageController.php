@@ -21,7 +21,7 @@ class ImageController extends Controller
         $images = Image::all();
         return response()->json([
             'status' => true,
-            'message' => 'All Images Retrieved Successfully',
+            'message' => 'Media Retrieved Successfully',
             'data' => ImageResource::collection($images),
             // 'data' => $images,
         ]);
@@ -39,14 +39,15 @@ class ImageController extends Controller
             $request->all(),
             [
                 'title' => 'required',
-                'src' => 'required|image|max:1048|mimes:jpg,png,jpeg,gif,svg',
+                // 'src' => 'required|image|max:1048|mimes:jpg,png,jpeg,gif,svg',
+                'src' => 'required|max:8000|mimes:jpg,png,jpeg,gif,svg,mp4,m4v,avi,flv,mov',
                 'post_id' => 'required',
             ],
         );
         if ($validatePost->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'Enter image data',
+                'message' => 'Enter Data',
                 'errors' => $validatePost->errors()
             ], 401);
         }
@@ -59,7 +60,7 @@ class ImageController extends Controller
         ]);
         return response()->json([
             'status' => true,
-            'message' => 'Image Uploaded Successfully',
+            'message' => 'Media Uploaded Successfully',
             'data' => $image,
         ], 200);
     }
@@ -76,12 +77,12 @@ class ImageController extends Controller
         if (is_null($image)) {
             return response()->json([
                 'status' => false,
-                'message' => 'Image Not Found',
+                'message' => 'Media Not Found',
             ]);
         }
         return response()->json([
             'status' => true,
-            'message' => 'Image Retrieved Successfully',
+            'message' => 'Media Retrieved Successfully',
             'data' => new ImageResource($image),
         ]);
     }
@@ -99,7 +100,7 @@ class ImageController extends Controller
         if (!$image) {
             return response()->json([
                 'status' => false,
-                'message' => 'Image Not Found',
+                'message' => 'Media Not Found',
             ]);
         }
 
@@ -107,18 +108,19 @@ class ImageController extends Controller
             $request->all(),
             [
                 'title' => 'required',
-                'src' => 'required|image|max:1048|mimes:jpg,png,jpeg,gif,svg',
+                // 'src' => 'required|image|max:1048|mimes:jpg,png,jpeg,gif,svg',
+                'src' => 'required|max:8000|mimes:jpg,png,jpeg,gif,svg,mp4,m4v,avi,flv,mov',
                 'post_id'=> 'required',
             ],
         );
         if ($validateImage->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'Enter Image Data',
+                'message' => 'Enter Data',
                 'errors' => $validateImage->errors()
             ], 401);
         }
-        
+
         $image->delete();
         $image_path = public_path("storage/{$image->src}");
         unlink($image_path);
@@ -134,7 +136,7 @@ class ImageController extends Controller
         $image->save();
         return response()->json([
             'status' => true,
-            'message' => 'Image Updated Successfully',
+            'message' => 'Media Updated Successfully',
             'data' => $image,
         ], 200);
     }
@@ -151,7 +153,7 @@ class ImageController extends Controller
         if (is_null($image)) {
             return response()->json([
                 'status' => false,
-                'message' => 'Image Not Found',
+                'message' => 'Media Not Found',
             ]);
         }
 
@@ -161,7 +163,7 @@ class ImageController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Image Deleted Successfully',
+            'message' => 'Media Deleted Successfully',
             'data' => $image,
         ]);
     }
