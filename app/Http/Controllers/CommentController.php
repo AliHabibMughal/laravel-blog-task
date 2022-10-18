@@ -99,7 +99,7 @@ class CommentController extends Controller
      */
     public function show($id)
     {
-        $comment = Comment::with('replies')->find($id);
+        $comment = Comment::find($id);
         if (is_null($comment)) {
             return response()->json([
                 'status' => false,
@@ -174,6 +174,7 @@ class CommentController extends Controller
             $request->all(),
             [
                 'body' => 'required',
+                'parent_id' => 'required',
             ],
         );
         if ($validateReply->fails()) {

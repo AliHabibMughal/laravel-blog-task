@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,44 @@ use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $users = User::all();
+        return response()->json([
+            'status' => true,
+            'message' => 'All Users Retrieved Successfully',
+            'data' => UserResource::collection($users),
+            // 'data' => $users,
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User Not Found',
+            ]);
+        }
+        return response()->json([
+            'status' => true,
+            'message' => 'User Retrieved Successfully',
+            'data' => new UserResource($user),
+        ]);
+    }
+
     /**
      * Create User
      * @param Request $request
@@ -105,5 +144,26 @@ class AuthController extends Controller
         }
     }
 
-    
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $user = User::find($id);
+        if (is_null($user)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User Not Found',
+            ]);
+        }
+        $user->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'User Deleted Successfully',
+            'data' => $user,
+        ]);
+    }
 }

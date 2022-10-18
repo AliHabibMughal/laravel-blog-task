@@ -150,7 +150,7 @@ class ImageController extends Controller
     public function destroy($id)
     {
         $image = Image::find($id);
-        if (is_null($image)) {
+        if (!$image) {
             return response()->json([
                 'status' => false,
                 'message' => 'Media Not Found',
