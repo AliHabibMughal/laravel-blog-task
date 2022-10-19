@@ -34,17 +34,17 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        $validatePost = Validator::make(
+        $validateComment = Validator::make(
             $request->all(),
             [
                 'body' => 'required',
             ],
         );
-        if ($validatePost->fails()) {
+        if ($validateComment->fails()) {
             return response()->json([
                 'status' => false,
                 'message' => 'Empty Comment Field!',
-                'errors' => $validatePost->errors()
+                'errors' => $validateComment->errors()
             ], 401);
         }
 
@@ -63,18 +63,18 @@ class CommentController extends Controller
 
     public function replyStore(Request $request)
     {
-        $validatePost = Validator::make(
+        $validateReply = Validator::make(
             $request->all(),
             [
                 'body' => 'required',
                 'parent_id' => 'required',
             ],
         );
-        if ($validatePost->fails()) {
+        if ($validateReply->fails()) {
             return response()->json([
                 'status' => false,
                 'message' => 'Reply field is empty!',
-                'errors' => $validatePost->errors()
+                'errors' => $validateReply->errors()
             ], 401);
         }
 

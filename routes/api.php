@@ -6,6 +6,7 @@ use App\Http\Controllers\{
     CommentController,
     CategoryController,
     ImageController,
+    LikeController,
 };
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('reply', [CommentController::class, 'replyStore']);
     Route::delete('reply/{id}', [CommentController::class, 'destroyReply']);
     Route::patch('reply/{id}', [CommentController::class, 'updateReply']);
+    Route::apiResource('postlikes', LikeController::class);
     
 });
 Route::apiResource('categories', CategoryController::class);

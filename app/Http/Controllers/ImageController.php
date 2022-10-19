@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ImageResource;
 use App\Models\Image;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
+// use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
+// use Illuminate\Support\Str;
 
 class ImageController extends Controller
 {
@@ -21,9 +21,9 @@ class ImageController extends Controller
         $images = Image::all();
         return response()->json([
             'status' => true,
-            'message' => 'Media Retrieved Successfully',
-            'data' => ImageResource::collection($images),
+            'message' => 'Image Retrieved Successfully',
             // 'data' => $images,
+            'data' => ImageResource::collection($images),
         ]);
     }
 
@@ -35,20 +35,20 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
-        $validatePost = Validator::make(
+        $validateImage = Validator::make(
             $request->all(),
             [
                 'title' => 'required',
-                // 'src' => 'required|image|max:1048|mimes:jpg,png,jpeg,gif,svg',
-                'src' => 'required|max:8000|mimes:jpg,png,jpeg,gif,svg,mp4,m4v,avi,flv,mov',
+                'src' => 'required|image|max:1048|mimes:jpg,png,jpeg,gif,svg',
+                // 'src' => 'required|max:8000|mimes:jpg,png,jpeg,gif,svg,mp4,m4v,avi,flv,mov',
                 'post_id' => 'required',
             ],
         );
-        if ($validatePost->fails()) {
+        if ($validateImage->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'Enter Data',
-                'errors' => $validatePost->errors()
+                'message' => 'Enter Data in All Fields',
+                'errors' => $validateImage->errors()
             ], 401);
         }
 
@@ -60,7 +60,7 @@ class ImageController extends Controller
         ]);
         return response()->json([
             'status' => true,
-            'message' => 'Media Uploaded Successfully',
+            'message' => 'Image Uploaded Successfully',
             'data' => $image,
         ], 200);
     }
@@ -77,12 +77,12 @@ class ImageController extends Controller
         if (is_null($image)) {
             return response()->json([
                 'status' => false,
-                'message' => 'Media Not Found',
+                'message' => 'Unable to find this image',
             ]);
         }
         return response()->json([
             'status' => true,
-            'message' => 'Media Retrieved Successfully',
+            'message' => 'Images are Displayed Successfully',
             'data' => new ImageResource($image),
         ]);
     }
@@ -100,7 +100,7 @@ class ImageController extends Controller
         if (!$image) {
             return response()->json([
                 'status' => false,
-                'message' => 'Media Not Found',
+                'message' => 'Unable to find this image',
             ]);
         }
 
@@ -108,15 +108,15 @@ class ImageController extends Controller
             $request->all(),
             [
                 'title' => 'required',
-                // 'src' => 'required|image|max:1048|mimes:jpg,png,jpeg,gif,svg',
-                'src' => 'required|max:8000|mimes:jpg,png,jpeg,gif,svg,mp4,m4v,avi,flv,mov',
+                'src' => 'required|image|max:1048|mimes:jpg,png,jpeg,gif,svg',
+                // 'src' => 'required|max:8000|mimes:jpg,png,jpeg,gif,svg,mp4,m4v,avi,flv,mov',
                 'post_id'=> 'required',
             ],
         );
         if ($validateImage->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'Enter Data',
+                'message' => 'Enter Data in All Fields',
                 'errors' => $validateImage->errors()
             ], 401);
         }
@@ -136,7 +136,7 @@ class ImageController extends Controller
         $image->save();
         return response()->json([
             'status' => true,
-            'message' => 'Media Updated Successfully',
+            'message' => 'Image Updated Successfully',
             'data' => $image,
         ], 200);
     }
@@ -153,7 +153,7 @@ class ImageController extends Controller
         if (!$image) {
             return response()->json([
                 'status' => false,
-                'message' => 'Media Not Found',
+                'message' => 'Image Not Found',
             ]);
         }
 
@@ -163,7 +163,7 @@ class ImageController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Media Deleted Successfully',
+            'message' => 'Image Deleted Successfully',
             'data' => $image,
         ]);
     }
