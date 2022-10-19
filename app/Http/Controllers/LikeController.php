@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Like, Post};
+use App\Models\{Like, Post, User};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class LikeController extends Controller
@@ -48,29 +49,39 @@ class LikeController extends Controller
             [
                 // 'postlikes' => 'required',
                 'post_id' => 'required',
-                // 'user_id' => 'required|unique:users,id',
             ],
         );
         if ($validateLike->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'Post & User Required',
+                'message' => 'Post Required',
                 'errors' => $validateLike->errors()
             ], 401);
         }
+        // $DBUserId = DB::table('likes')->pluck('user_id');
 
-        $like = Like::create([
-            // 'postlikes' => $request->postlikes,
-            'user_id' => Auth::id(),
-            // 'user_id' => $request->user_id,
-            'post_id' => $request->post_id,
-        ]);
+        if ( !(Like::where('user_id', Auth::id())->where('post_id', $request->post_id)->first()) ) {
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Liked Successfully',
-            'data' => $like,
-        ], 200);
+            $like = Like::create([
+                // 'postlikes' => $request->postlikes,
+                'user_id' => Auth::id(),
+                'post_id' => $request->post_id,
+            ]);
+
+            // $user->likes()->create([])
+            return response()->json([
+                'status' => true,
+                'message' => 'Post Liked Successfully',
+                'data' => $like,
+            ], 200);
+
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => 'This User Has Already Liked This Post',
+            ]);
+        }
+
     }
 
     /**

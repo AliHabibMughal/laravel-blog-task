@@ -143,27 +143,4 @@ class AuthController extends Controller
             ], 500);
         }
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $user = User::find($id);
-        if (is_null($user)) {
-            return response()->json([
-                'status' => false,
-                'message' => 'User Not Found',
-            ]);
-        }
-        $user->delete();
-        return response()->json([
-            'status' => true,
-            'message' => 'User Deleted Successfully',
-            'data' => $user,
-        ]);
-    }
 }

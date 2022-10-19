@@ -154,47 +154,6 @@ class CommentController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function updateReply(Request $request, $id)
-    {
-        $reply = Comment::find($id);
-        if (is_null($reply)) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Reply Not Found',
-            ]);
-        }
-
-        $validateReply = Validator::make(
-            $request->all(),
-            [
-                'body' => 'required',
-                'parent_id' => 'required',
-            ],
-        );
-        if ($validateReply->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Enter Reply',
-                'errors' => $validateReply->errors()
-            ], 401);
-        }
-
-        $reply->body = $request->body;
-        $reply->save();
-        return response()->json([
-            'status' => true,
-            'message' => 'Reply Updated Successfully',
-            'data' => $reply,
-        ], 200);
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -215,30 +174,6 @@ class CommentController extends Controller
             'status' => true,
             'message' => 'Comment Deleted Successfully with all replies(if any)',
             'data' => $comment,
-        ]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroyReply($id)
-    {
-        $reply = Comment::find($id);
-        if (is_null($reply)) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Reply Not Found',
-            ]);
-        }
-
-        $reply->delete();
-        return response()->json([
-            'status' => true,
-            'message' => 'Reply Deleted Successfully',
-            'data' => $reply,
         ]);
     }
 }
