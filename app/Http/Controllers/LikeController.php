@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\{Like, Post, User};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class LikeController extends Controller
@@ -18,9 +17,10 @@ class LikeController extends Controller
     public function index()
     {
         $likes = Post::withCount('likes')->get();
+        // $likes = Like::count();
         return response()->json([
             'status' => true,
-            'message' => 'Likes Retrieved Successfully',
+            'message' => 'Posts With Total Likes Retrieved Successfully',
             'data' => $likes,
             // 'data' => LikeResource::collection($likes),
         ]);
@@ -60,27 +60,55 @@ class LikeController extends Controller
         }
         // $DBUserId = DB::table('likes')->pluck('user_id');
 
-        if ( !(Like::where('user_id', Auth::id())->where('post_id', $request->post_id)->first()) ) {
+        $likeFields = [
+            ['user_id', Auth::id()],
+            ['post_id', $request->post_id],
+        ];
 
-            $like = Like::create([
-                // 'postlikes' => $request->postlikes,
-                'user_id' => Auth::id(),
-                'post_id' => $request->post_id,
-            ]);
+        $like = Like::where($likeFields);
 
-            // $user->likes()->create([])
+        if ($like->exists()) {
+            $like->delete();
             return response()->json([
                 'status' => true,
-                'message' => 'Post Liked Successfully',
-                'data' => $like,
+                'message' => 'Disliked Successfully',
+
             ], 200);
 
         } else {
+            $liked = Like::create([
+                'user_id' => Auth::id(),
+                'post_id' => $request->post_id,
+            ]);
             return response()->json([
                 'status' => true,
-                'message' => 'This User Has Already Liked This Post',
-            ]);
+                'message' => 'Liked Successfully',
+                'data' => $liked,
+
+            ], 200);
         }
+
+        // if ( !(Like::where('user_id', Auth::id())->where('post_id', $request->post_id)->first()) ) {
+
+        //     $like = Like::create([
+        //         // 'postlikes' => $request->postlikes,
+        //         'user_id' => Auth::id(),
+        //         'post_id' => $request->post_id,
+        //     ]);
+
+        //     // $user->likes()->create([])
+        //     return response()->json([
+        //         'status' => true,
+        //         'message' => 'Post Liked Successfully',
+        //         'data' => $like,
+        //     ], 200);
+
+        // } else {
+        //     return response()->json([
+        //         'status' => true,
+        //         'message' => 'This User Has Already Liked This Post',
+        //     ]);
+        // }
 
     }
 

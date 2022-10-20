@@ -24,7 +24,6 @@ class AuthController extends Controller
             'status' => true,
             'message' => 'All Users Retrieved Successfully',
             'data' => UserResource::collection($users),
-            // 'data' => $users,
         ]);
     }
 
